@@ -25,9 +25,26 @@ var icons = {
   'destination-out': 'arrow-right',
   'destination-atop': 'paste'
 };
+var examples = [
+  function(ctx, t) {
+    ctx.fillStyle = '#f00';
+    ctx.fillRect(50, 50, 100, 100);
+  }
+];
 
 var workspace,
-    resultCvs;
+    resultCvs,
+    resultCtx;
+
+var __nextFrame = (function() {
+   return window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame ||
+          window.oRequestAnimationFrame ||
+          window.msRequestAnimationFrame ||
+          function(callback){
+            return window.setTimeout(callback, 1000 / 60);
+          } })();
 
 function _contextOf(cvs) {
   return cvs.getContext('2d');
@@ -39,12 +56,17 @@ function addCanvas() {
 
   // initialize
   data.op = (id !== 0) ? 0 : -1;
+  data.example = 0;
   var cvs =  document.createElement('canvas');
   cvs.id = 'elm-'+id;
   data.cvs = cvs;
+  data.ctx = _contextOf(cvs);
   formula.push(data);
 
-  // add to DOM
+  // add to DOM: "before" elm
+  // TODO
+
+  // add to DOM: "operation" elm
   if (data.op >= 0) {
     var opName = compositions[data.op];
 
@@ -59,8 +81,8 @@ function addCanvas() {
     opElm.appendChild(textElm);
     workspace.appendChild(opElm);
 
-    opElm.onclick = (function(data, iconElm, textElm) {
-        return function() {
+    opElm.onclick = /*(function(data, iconElm, textElm) {
+        return */function() {
             if (data.op < (compositions.length - 1)) {
                data.op++;
             } else {
@@ -70,22 +92,35 @@ function addCanvas() {
             iconElm.className = 'icon-'+icons[opName];
             textElm.innerHTML = opName;
         };
-    })(data, iconElm, textElm);
+    /*})(data, iconElm, textElm)*/;
   }
   workspace.appendChild(cvs);
+
+  // add to DOM: "after" elm
+  // TODO
 }
 
 function deleteLastCanvas() {
 }
 
 function compute() {
+  resultCtx.clearRect(0, 0, resultCvs.width, resultCvs.width);
+
+  for (var i = 0, fl = formula.length; i < fl; i++) {
+    var data = formula[i];
+    examples[data.example](data.ctx);
+    resultCtx.drawImage(data.cvs, 0, 0);
+  }
+
+  __nextFrame(compute);
 }
 
 function start() {
   workspace = document.getElementById('workspace');
   resultCvs = document.getElementById('result');
+  resultCtx = _contextOf(resultCvs);
 
   addCanvas();
   addCanvas();
-  compute();
+  __nextFrame(compute);
 }
