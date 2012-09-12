@@ -5,20 +5,20 @@ var compositions = [
   'source-out',
   'source-atop',
   'lighter',
+  'darker',
   'xor',
   'destination-over',
   'destination-in',
   'destination-out',
   'destination-atop',
-  'darker'
 ];
 var icons = {
   'source-over': 'envelope',
   'source-in': 'signin',
   'source-out': 'signout',
   'source-atop': 'envelope-alt',
-  'lighter': 'volume-down',
-  'darker': 'volume-off',
+  'lighter': 'star-empty',
+  'darker': 'star',
   'xor': 'random',
   'destination-over': 'copy',
   'destination-in': 'arrow-left',
@@ -38,24 +38,39 @@ function addCanvas() {
   var data = {};
 
   // initialize
-  if (id !== 0) data.op = 'source-over';
+  data.op = (id !== 0) ? 0 : -1;
   var cvs =  document.createElement('canvas');
   cvs.id = 'elm-'+id;
   data.cvs = cvs;
   formula.push(data);
 
   // add to DOM
-  if (data.op) {
+  if (data.op >= 0) {
+    var opName = compositions[data.op];
+
     var opElm = document.createElement('span');
     opElm.className = 'comp-op';
     var iconElm = document.createElement('i');
-    iconElm.className = 'icon-'+icons[data.op];
+    iconElm.className = 'icon-'+icons[opName];
     var textElm = document.createElement('span');
-    textElm.innerHTML = data.op;
+    textElm.innerHTML = opName;
 
     opElm.appendChild(iconElm);
     opElm.appendChild(textElm);
     workspace.appendChild(opElm);
+
+    opElm.onclick = (function(data, iconElm, textElm) {
+        return function() {
+            if (data.op < (compositions.length - 1)) {
+               data.op++;
+            } else {
+               data.op = 0;
+            }
+            var opName = compositions[data.op];
+            iconElm.className = 'icon-'+icons[opName];
+            textElm.innerHTML = opName;
+        };
+    })(data, iconElm, textElm);
   }
   workspace.appendChild(cvs);
 }
