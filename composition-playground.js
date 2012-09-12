@@ -61,6 +61,8 @@ function _contextOf(cvs) {
 }
 
 function addCanvas() {
+  __lock = true;
+
   var id = formula.length;
   var data = {};
 
@@ -105,6 +107,8 @@ function addCanvas() {
             __lock = false;
         };
     /*})(data, iconElm, textElm);*/
+
+    data.opElm = opElm;
   };
   workspace.appendChild(cvs);
 
@@ -124,9 +128,16 @@ function addCanvas() {
 
   // add to DOM: "after" elm
   // TODO
+
+  __lock = false;
 }
 
-function deleteLastCanvas() {
+function deleteCanvas() {
+  __lock = true;
+  var data = formula.pop();
+  if (data.opElm) workspace.removeChild(data.opElm);
+  workspace.removeChild(data.cvs);
+  __lock = false;
 }
 
 var startT = -1,
@@ -162,5 +173,8 @@ function start() {
 
   addCanvas();
   addCanvas();
+
+  document.getElementById('add-canvas').onclick = addCanvas;
+  document.getElementById('delete-canvas').onclick = deleteCanvas;
   __nextFrame(compute);
 }
