@@ -1,10 +1,53 @@
+body {
+    /*font-size: 14px;*/
+}
+
 canvas {
-  width: 200px;
-  height: 150px;
-  border: 1px solid #000;
-  margin: 10px;
+    width: 200px;
+    height: 150px;
+    border: 1px solid #000;
+    margin: 10px;
 }
 
 canvas#result {
-  border: 2px solid #006;
+    border: 2px solid #006;
+    cursor: default;
+}
+
+canvas, .operation, #add-canvas, #delete-canvas {
+    cursor: pointer;
+}
+
+.operation {
+    display: inline-block;
+    /*position: absolute;*/
+    width: 100px;
+    text-align: center;
+    background-color: #eee;
+}
+
+#add-canvas i, #delete-canvas i, .operation i {
+    position: relative;
+    top: 20px;
+    font-size: 5em;
+}
+
+i span {
+    display: none;
+}
+
+#equals, #result {
+    float: left;
+}
+
+#canvas-manage {
+    clear: both;
+}
+
+#workspace {
+    width: auto;
+}
+
+#formula {
+    width: 100%;
 }

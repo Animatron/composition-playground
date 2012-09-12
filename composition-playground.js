@@ -1,3 +1,5 @@
+var period = 2;
+
 var formula = [];
 var compositions = [
   'source-over',
@@ -36,7 +38,7 @@ var examples = [
   },
   function(ctx, t) {
     ctx.fillStyle = '#00f';
-    ctx.fillRect(t/10*300, 0, 200, 200);
+    ctx.fillRect(t/period*250, 0, 50, 200);
   }
 ];
 
@@ -83,7 +85,7 @@ function addCanvas() {
     var opName = compositions[data.op];
 
     var opElm = document.createElement('span');
-    opElm.className = 'comp-op';
+    opElm.className = 'operation';
     var iconElm = document.createElement('i');
     iconElm.className = 'icon-'+icons[opName];
     var textElm = document.createElement('span');
@@ -142,12 +144,11 @@ function deleteCanvas() {
 
 var startT = -1,
     t = -1;
-var maxT = 10;
 
 function compute() {
   if (!__lock) {
 
-    if (t > maxT) startT = -1;
+    if (t > period) startT = -1;
     if (startT === -1) startT = new Date();
     t = ((new Date()) - startT) / 1000;
 
