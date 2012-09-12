@@ -1,0 +1,10 @@
+canvas {
+  width: 200px;
+  height: 150px;
+  border: 1px solid #000;
+  margin: 10px;
+}
+
+canvas#result {
+  border: 2px solid #006;
+}

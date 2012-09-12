@@ -9,68 +9,18 @@
   "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>Animatron Composition Playeground</title>
+  <title>Animatron Composition Playground</title>
 
-  <script type="text/javascript">
-    var formula = [];
-    var workspace = document.getElementById('workspace');
-    var resultCvs = document.getElementById('result');
-
-    function _contextOf(cvs) {
-      return cvs.getContext('2d');
-    }
-
-    function addCanvas() {
-      var id = formula.length;
-      var data = {};
-
-      // initialize
-      if (id !== 0) data.op = 'default';
-      var cvs =  document.createElement('canvas');
-      cvs.id = 'elm-'+id;
-      data.cvs = cvs;
-      formula.push(data);
-
-      // add to DOM
-      if (data.op) {
-        var opElm = document.createElement('span');
-        opElm.innerHtml = data.op;
-        workspace.appendChild(opElm);
-      }
-      workspace.appendChild(cvs);
-    }
-
-    function deleteLastCanvas() {
-    }
-
-    function compute() {
-    }
-
-    addCanvas();
-    addCanvas();
-    compute();
-  </script>
-
-  <style type="text/css">
-    canvas {
-      width: 200px;
-      height: 150px;
-      border: 1px solid #000;
-      margin: 10px;
-    }
-
-    canvas#result {
-      border: 2px solid #006;
-    }
-  </style>
+  <script type="text/javascript" src="composition-playground.js"></script>
+  <link rel="stylesheet" href="composition-playground.css">
 
 </head>
 
 <body>
   <h1>Animatron Composition Playground</h1>
-  <div id="workspace">
-  </div>
+  <div id="workspace"></div>
   <div class="operation"></div>
   <div class="canvas-inside"><canvas id="result"></canvas></div>
   <div id="copyright">Copyright &copy; 2011-2012 by Animatron.</div>
+  <script type="text/javascript">start();</script>
 </body>
