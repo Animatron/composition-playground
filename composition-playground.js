@@ -70,7 +70,7 @@ function addCanvas() {
 
   // initialize
   data.op = (id !== 0) ? 0 : -1;
-  data.example = 0;
+  data.example = (id < examples.length) ? id : 0;
   var cvs =  document.createElement('canvas');
   cvs.id = 'elm-'+id;
   data.cvs = cvs;
