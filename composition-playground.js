@@ -13,17 +13,17 @@ var compositions = [
   'darker'
 ];
 var icons = {
-  'source-over': '',
-  'source-in': '',
-  'source-out': '',
-  'source-atop': '',
-  'lighter': '',
-  'xor': '',
-  'destination-over': '',
-  'destination-in': '',
-  'destination-out': '',
-  'destination-atop': '',
-  'darker': ''
+  'source-over': 'envelope',
+  'source-in': 'signin',
+  'source-out': 'signout',
+  'source-atop': 'envelope-alt',
+  'lighter': 'volume-down',
+  'darker': 'volume-off',
+  'xor': 'random',
+  'destination-over': 'copy',
+  'destination-in': 'arrow-left',
+  'destination-out': 'arrow-right',
+  'destination-atop': 'paste'
 };
 
 var workspace,
@@ -47,7 +47,14 @@ function addCanvas() {
   // add to DOM
   if (data.op) {
     var opElm = document.createElement('span');
-    opElm.innerHTML = data.op;
+    opElm.className = 'comp-op';
+    var iconElm = document.createElement('i');
+    iconElm.className = 'icon-'+icons[data.op];
+    var textElm = document.createElement('span');
+    textElm.innerHTML = data.op;
+
+    opElm.appendChild(iconElm);
+    opElm.appendChild(textElm);
     workspace.appendChild(opElm);
   }
   workspace.appendChild(cvs);
