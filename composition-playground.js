@@ -3,29 +3,29 @@ var period = 2;
 var formula = [];
 var compositions = [
   'source-over',
+  'source-atop',
   'source-in',
   'source-out',
-  'source-atop',
   'lighter',
   'darker',
   'xor',
   'destination-over',
-  'destination-in',
-  'destination-out',
   'destination-atop',
+  'destination-in',
+  'destination-out'
 ];
 var icons = {
   'source-over': 'envelope',
+  'source-atop': 'envelope-alt',
   'source-in': 'signin',
   'source-out': 'signout',
-  'source-atop': 'envelope-alt',
   'lighter': 'star-empty',
   'darker': 'star',
   'xor': 'random',
-  'destination-over': 'copy',
+  'destination-over': 'remove-circle',
+  'destination-atop': 'remove-sign',
   'destination-in': 'arrow-left',
-  'destination-out': 'arrow-right',
-  'destination-atop': 'paste'
+  'destination-out': 'arrow-right'
 };
 var examples = [
   function(ctx, t) {
@@ -177,5 +177,6 @@ function start() {
 
   document.getElementById('add-canvas').onclick = addCanvas;
   document.getElementById('delete-canvas').onclick = deleteCanvas;
+
   __nextFrame(compute);
 }

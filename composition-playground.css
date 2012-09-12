@@ -5,12 +5,12 @@ body {
 canvas {
     width: 200px;
     height: 150px;
-    border: 1px solid #000;
+    border: 2px solid #eee;
     margin: 10px;
 }
 
 canvas#result {
-    border: 2px solid #006;
+    border: 2px solid #fee;
     cursor: default;
 }
 
@@ -18,18 +18,26 @@ canvas, .operation, #add-canvas, #delete-canvas {
     cursor: pointer;
 }
 
+#workspace canvas {
+    float: left;
+}
+
 .operation {
-    display: inline-block;
+    display: block;
     /*position: absolute;*/
+    font-size: 0.7em;
     width: 100px;
+    float: left;
+    margin: 35px 10px;
     text-align: center;
-    background-color: #eee;
 }
 
 #add-canvas i, #delete-canvas i, .operation i {
+    display: block;
     position: relative;
     top: 20px;
-    font-size: 5em;
+    font-size: 7em;
+    margin: 5px;
 }
 
 i span {
@@ -38,6 +46,11 @@ i span {
 
 #equals, #result {
     float: left;
+    cursor: default;
+}
+
+#formula, #canvas-manage, #copyright {
+    font-family: sans-serif;
 }
 
 #canvas-manage {
@@ -49,5 +62,37 @@ i span {
 }
 
 #formula {
+    display: block;
+    border-top: 3px dashed #ccc;
+    /*height: 200px;*/
+}
+
+#canvas-manage {
+    border-top: 3px dashed #ccc;
+    font-size: 10px;
+    color: #336;
     width: 100%;
+    text-align: center;
+}
+
+#canvas-manage div {
+    display: inline-block;
+    margin: 10px;
+}
+
+#canvas-manage div i {
+    margin: 10px;
+}
+
+#copyright {
+    font-size: .6em;
+    background-color: #eee;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 5px;
+}
+
+#equals {
+    color: #666;
 }
