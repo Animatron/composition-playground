@@ -1,4 +1,6 @@
-var period = 2;
+var period = 2,
+    width = 200,
+    height = 150;
 
 var formula = [];
 var compositions = [
@@ -27,18 +29,93 @@ var icons = {
   'destination-in': 'arrow-left',
   'destination-out': 'arrow-right'
 };
+var default_op = 0; /* source-over */
+
 var examples = [
   function(ctx, t) {
     ctx.fillStyle = '#f00';
-    ctx.fillRect(50, 50, 100, 100);
-  },
-  function(ctx, t) {
-    ctx.fillStyle = '#0f0';
-    ctx.fillRect(100, 100, 100, 100);
+    ctx.fillRect(50, 50, 60, 60);
   },
   function(ctx, t) {
     ctx.fillStyle = '#00f';
+    ctx.beginPath();
+    ctx.arc(110, 110, 30, 0, 2 * Math.PI, false);
+    ctx.fill();
+    //ctx.fillStyle = '#f00';
+    //ctx.fillRect(75, 100, 75, 100);
+  },
+  function(ctx, t) {
+    ctx.fillStyle = '#090';
     ctx.fillRect(t/period*250, 0, 50, 200);
+  },
+  function(ctx, t) {
+    ctx.beginPath();
+    ctx.fillStyle = '#f00';
+    ctx.arc(t/(period/2)*250, 80, 50, 0, 2 * Math.PI, false);
+    ctx.fill();
+  },
+  function(ctx, t) {
+    var x = width / 2;
+    var y = height / 2;
+    var radius = 70;
+    var offset = 45;
+
+    /*
+     * save() allows us to save the canvas context before
+     * defining the clipping region so that we can return
+     * to the default state later on
+     */
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+    ctx.clip();
+
+    // draw blue circle inside clipping region
+    ctx.beginPath();
+    ctx.arc(x - offset, y - offset, radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = "blue";
+    ctx.fill();
+
+    // draw yellow circle inside clipping region
+    ctx.beginPath();
+    ctx.arc(x + offset, y, radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = "yellow";
+    ctx.fill();
+
+    // draw red circle inside clipping region
+    ctx.beginPath();
+    ctx.arc(x, y + offset, radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = "red";
+    ctx.fill();
+
+    /*
+     * restore() restores the canvas context to its original state
+     * before we defined the clipping region
+     */
+    ctx.restore();
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle= "black";
+    ctx.stroke();
+  },
+  function(ctx, t) {
+    var grad = ctx.createLinearGradient(0,0,width,height);
+    grad.addColorStop(t/period, '#fff');
+    grad.addColorStop(1, '#000');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,width,height);
+  },
+  function(ctx, t) {
+    var grad = ctx.createLinearGradient(0,0,width,height);
+    grad.addColorStop(0, '#000');
+    grad.addColorStop(1-(t/period), 'rgba(0,0,0,0)');
+    grad.addColorStop(1, '#000');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,width,height);
+    ctx.font = '8pt sans-serif';
+    ctx.fillStyle = '000';
+    ctx.fillText("White is transparent!", 10, 20);
   }
 ];
 
@@ -69,9 +146,11 @@ function addCanvas() {
   var data = {};
 
   // initialize
-  data.op = (id !== 0) ? 0 : -1;
+  data.op = (id !== 0) ? default_op : -1;
   data.example = (id < examples.length) ? id : 0;
   var cvs =  document.createElement('canvas');
+  cvs.width = width;
+  cvs.height = height;
   cvs.id = 'elm-'+id;
   data.cvs = cvs;
   data.ctx = _contextOf(cvs);
@@ -118,7 +197,7 @@ function addCanvas() {
       return */function() {
           __lock = true;
           data.ctx.clearRect(0, 0,
-               data.cvs.width, data.cvs.height);
+               /*data.cvs.*/width, /*data.cvs.*/height);
           if (data.example < (examples.length - 1)) {
               data.example++;
           } else {
@@ -152,15 +231,27 @@ function compute() {
     if (startT === -1) startT = new Date();
     t = ((new Date()) - startT) / 1000;
 
-    resultCtx.clearRect(0, 0, resultCvs.width, resultCvs.width);
+    resultCtx.save();
+
+    resultCtx.clearRect(0, 0, /*resultCvs.*/width, /*resultCvs.*/height);
+
+    resultCtx.globalCompositeOperation = compositions[default_op];
 
     for (var i = 0, fl = formula.length; i < fl; i++) {
-      var data = formula[i];
-      data.ctx.clearRect(0, 0, data.cvs.width, data.cvs.height);
-      examples[data.example](data.ctx, t);
-      resultCtx.globalCompositeOperation = compositions[data.op];
-      resultCtx.drawImage(data.cvs, 0, 0);
+      var data = formula[i],
+          exampleCvs = data.cvs,
+          exampleCtx = data.ctx;
+      exampleCtx.save();
+      exampleCtx.clearRect(0, 0, /*data.cvs.*/width, /*data.cvs.*/height);
+      examples[data.example](exampleCtx, Math.min(period, t));
+      exampleCtx.restore();
+      if (data.op >= 0) {
+        resultCtx.globalCompositeOperation = compositions[data.op];
+      }
+      resultCtx.drawImage(exampleCvs, 0, 0);
     }
+
+    resultCtx.restore();
 
   }
 
@@ -171,6 +262,9 @@ function start() {
   workspace = document.getElementById('workspace');
   resultCvs = document.getElementById('result');
   resultCtx = _contextOf(resultCvs);
+
+  resultCvs.width = width;
+  resultCvs.height = height;
 
   addCanvas();
   addCanvas();
