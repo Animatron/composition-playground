@@ -52,6 +52,22 @@ var examples = [
     ctx.fillRect(t/period*width, 0, 50, 200);
   },
   function(ctx, t) {
+    ctx.globalAlpha = 1 - (t / period);
+    ctx.fillStyle = '#c93';
+    ctx.strokeStyle = '#39c';
+    ctx.lineWidth = 3;
+    ctx.fillRect(20, 20, 30, 30);
+    ctx.strokeRect(20, 20, 30, 30);
+  },
+  function(ctx, t) {
+    ctx.globalAlpha = (t / period);
+    ctx.fillStyle = '#39c';
+    ctx.strokeStyle = '#c93';
+    ctx.lineWidth = 3;
+    ctx.fillRect(140, 20, 30, 30);
+    ctx.strokeRect(140, 20, 30, 30);
+  },
+  function(ctx, t) {
     ctx.beginPath();
     ctx.fillStyle = '#f00';
     ctx.arc(20, t/period*height, 30, 0, 2 * Math.PI, false);
